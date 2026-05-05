@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mirza Aaqib Beg</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f2ec;
+    --ink: #0f0e0c;
+    --muted: #7a7570;
+    --accent: #2a5cff;
+    --card: #edeae2;
+    --border: rgba(15,14,12,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+    cursor: none;
+  }
+
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor.hover { width: 36px; height: 36px; background: transparent; border: 1.5px solid var(--accent); }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    z-index: 100;
+    mix-blend-mode: normal;
+  }
+
+  .nav-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.1s forwards;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .nav-links li:nth-child(1) a { animation-delay: 0.2s; }
+  .nav-links li:nth-child(2) a { animation-delay: 0.3s; }
+  .nav-links li:nth-child(3) a { animation-delay: 0.4s; }
+  .nav-links a:hover { color: var(--ink); }
+
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: center;
+    padding: 0 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-left {
+    padding-right: 4rem;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.3s forwards;
+  }
+
+  .hero-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.4s forwards;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .hero-bio {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 480px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.55s forwards;
+  }
+
+  .hero-bio strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .hero-bio a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--border);
+    transition: text-decoration-color 0.2s;
+  }
+  .hero-bio a:hover { text-decoration-color: var(--ink); }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.65s forwards;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+
+  .hero-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.6s forwards;
+  }
+
+  .robot-wrap {
+    position: relative;
+    width: 320px;
+    height: 380px;
+  }
+
+  .robot-wrap svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 8px 40px rgba(42,92,255,0.08));
+  }
+
+  .float-badge {
+    position: absolute;
+    bottom: 20px;
+    right: -20px;
+    background: var(--ink);
+    color: var(--bg);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    animation: floatBadge 3s ease-in-out infinite;
+  }
+
+  .float-badge-2 {
+    position: absolute;
+    top: 30px;
+    left: -24px;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    animation: floatBadge 3s ease-in-out 1.5s infinite;
+  }
+
+  section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 3rem;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .project-card {
+    background: var(--bg);
+    padding: 2rem;
+    transition: background 0.2s;
+    cursor: none;
+  }
+
+  .project-card:hover { background: var(--card); }
+
+  .project-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .project-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .project-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .stack-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 9px;
+    background: var(--card);
+    border-radius: 4px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .project-card:hover .stack-pill { background: var(--bg); }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    text-decoration: none;
+    margin-top: 1.25rem;
+    letter-spacing: 0.04em;
+  }
+
+  .project-link::after { content: '↗'; }
+
+  .edu-timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .edu-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .edu-item {
+    position: relative;
+    margin-bottom: 3rem;
+    padding-left: 1.5rem;
+  }
+
+  .edu-item::before {
+    content: '';
+    position: absolute;
+    left: -2.1rem;
+    top: 8px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1.5px solid var(--muted);
+  }
+
+  .edu-item.current::before { background: var(--accent); border-color: var(--accent); }
+
+  .edu-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
+  }
+
+  .edu-degree {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+  }
+
+  .edu-school {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .edu-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 0.5rem;
+    padding: 4px 10px;
+    border: 1px solid rgba(42,92,255,0.25);
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .contact-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .contact-intro {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .contact-intro em { font-style: italic; color: var(--muted); }
+
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--ink);
+    transition: background 0.2s, border-color 0.2s;
+    border-radius: 4px;
+  }
+
+  .contact-link:hover { background: var(--card); border-color: var(--ink); }
+
+  .contact-link-label { font-size: 14px; font-weight: 400; }
+  .contact-link-val { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
+  .contact-link-arrow { font-size: 16px; opacity: 0.4; transition: opacity 0.2s, transform 0.2s; }
+  .contact-link:hover .contact-link-arrow { opacity: 1; transform: translate(3px, -3px); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .availability {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .dot-live {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes floatBadge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+    50% { opacity: 0.8; box-shadow: 0 0 0 4px rgba(34,197,94,0); }
+  }
+
+  @keyframes eyeBlink {
+    0%, 92%, 100% { transform: scaleY(1); }
+    96% { transform: scaleY(0.1); }
+  }
+
+  @keyframes scanLine {
+    0% { transform: translateY(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100%); opacity: 0; }
+  }
+
+  @keyframes antennaPulse {
+    0%, 100% { fill: #2a5cff; r: 4; }
+    50% { fill: #60a5fa; r: 6; }
+  }
+
+  .eye-left, .eye-right { animation: eyeBlink 4s ease-in-out infinite; transform-origin: center; }
+  .eye-right { animation-delay: 0.1s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .hero { grid-template-columns: 1fr; padding: 6rem 1.5rem 3rem; gap: 3rem; text-align: center; }
+    .hero-left { padding-right: 0; }
+    .hero-bio { max-width: 100%; }
+    .hero-tags { justify-content: center; }
+    .hero-right { order: -1; }
+    .robot-wrap { width: 220px; height: 260px; }
+    section { padding: 4rem 1.5rem; }
+    .contact-block { grid-template-columns: 1fr; gap: 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .float-badge, .float-badge-2 { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<nav>
+  <a href="#" class="nav-name">Mirza Aaqib Beg</a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="event.preventDefault(); document.getElementById('projects').scrollIntoView({behavior:'smooth'})">Projects</a></li>
+    <li><a href="#" onclick="event.preventDefault(); document.getElementById('education').scrollIntoView({behavior:'smooth'})">Education</a></li>
+    <li><a href="#" onclick="event.preventDefault(); document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">MCA · New Delhi, India</p>
+    <h1 class="hero-name">Mirza<br><em>Aaqib</em> Beg</h1>
+    <p class="hero-bio">
+      I'm an MCA student at <strong>Bharati Vidyapeeth</strong> specialising in <strong>Cloud Computing and Data Science</strong>, concurrently pursuing a PG Diploma in Applied Statistics from <strong>IGNOU</strong>. I'm building the technical foundation to become an <strong>ML researcher and engineer</strong>.
+      <br><br>
+      I'm currently learning Python, working through the Machine Learning Specialization, and completing IBM's Gen AI Engineer certification. My long-term goal is to pursue a <strong>research-focused Master's abroad</strong> — at the intersection of machine learning, statistics, and real-world impact.
+    </p>
+    <div class="hero-tags">
+      <span class="tag">Python</span>
+      <span class="tag">Machine Learning</span>
+      <span class="tag">Gen AI</span>
+      <span class="tag">Cloud Computing</span>
+      <span class="tag">Statistics</span>
+      <span class="tag">Aspiring Researcher</span>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="robot-wrap">
+      <div class="float-badge-2">// learning ML daily</div>
+      <svg viewBox="0 0 320 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <clipPath id="screenClip">
+            <rect x="96" y="148" width="128" height="72" rx="6"/>
+          </clipPath>
+        </defs>
+
+        <!-- Antenna -->
+        <line x1="160" y1="32" x2="160" y2="62" stroke="#0f0e0c" stroke-width="2"/>
+        <circle cx="160" cy="26" r="6" fill="#2a5cff">
+          <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="fill" values="#2a5cff;#60a5fa;#2a5cff" dur="2s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- Neck -->
+        <rect x="140" y="284" width="40" height="28" rx="4" fill="#d4d0c8"/>
+        <rect x="148" y="288" width="8" height="20" rx="2" fill="#bcb9b0"/>
+        <rect x="164" y="288" width="8" height="20" rx="2" fill="#bcb9b0"/>
+
+        <!-- Shoulders / body hint -->
+        <rect x="60" y="304" width="200" height="50" rx="16" fill="#e8e4db"/>
+        <rect x="80" y="312" width="60" height="34" rx="8" fill="#d4d0c8"/>
+        <rect x="180" y="312" width="60" height="34" rx="8" fill="#d4d0c8"/>
+        <rect x="148" y="316" width="24" height="24" rx="4" fill="#bcb9b0"/>
+        <circle cx="160" cy="328" r="5" fill="#2a5cff" opacity="0.7"/>
+
+        <!-- Head -->
+        <rect x="72" y="62" width="176" height="226" rx="24" fill="#edeae2"/>
+        <rect x="76" y="66" width="168" height="218" rx="20" fill="#f5f2ec"/>
+
+        <!-- Ear bolts -->
+        <circle cx="72" cy="158" r="10" fill="#d4d0c8" stroke="#bcb9b0" stroke-width="1"/>
+        <circle cx="72" cy="158" r="4" fill="#bcb9b0"/>
+        <circle cx="248" cy="158" r="10" fill="#d4d0c8" stroke="#bcb9b0" stroke-width="1"/>
+        <circle cx="248" cy="158" r="4" fill="#bcb9b0"/>
+
+        <!-- Forehead panel -->
+        <rect x="100" y="82" width="120" height="48" rx="8" fill="#edeae2" stroke="#d4d0c8" stroke-width="1"/>
+        <rect x="108" y="90" width="26" height="10" rx="2" fill="#2a5cff" opacity="0.8"/>
+        <rect x="140" y="90" width="16" height="10" rx="2" fill="#d4d0c8"/>
+        <rect x="162" y="90" width="16" height="10" rx="2" fill="#d4d0c8"/>
+        <rect x="108" y="106" width="70" height="4" rx="2" fill="#d4d0c8"/>
+        <rect x="182" y="106" width="30" height="4" rx="2" fill="#2a5cff" opacity="0.4"/>
+
+        <!-- Eyes background panels -->
+        <rect x="96" y="148" width="52" height="52" rx="10" fill="#0f0e0c"/>
+        <rect x="172" y="148" width="52" height="52" rx="10" fill="#0f0e0c"/>
+
+        <!-- Eyes glow -->
+        <rect x="98" y="150" width="48" height="48" rx="8" fill="#111827"/>
+        <rect x="174" y="150" width="48" height="48" rx="8" fill="#111827"/>
+
+        <!-- Iris -->
+        <circle cx="122" cy="174" r="16" fill="#1e3a8a"/>
+        <circle cx="196" cy="174" r="16" fill="#1e3a8a"/>
+
+        <!-- Pupil - blinking eyes -->
+        <g class="eye-left">
+          <circle cx="122" cy="174" r="10" fill="#2a5cff"/>
+          <circle cx="122" cy="174" r="5" fill="#0f0e0c"/>
+          <circle cx="126" cy="170" r="2" fill="#fff" opacity="0.8"/>
+        </g>
+        <g class="eye-right">
+          <circle cx="196" cy="174" r="10" fill="#2a5cff"/>
+          <circle cx="196" cy="174" r="5" fill="#0f0e0c"/>
+          <circle cx="200" cy="170" r="2" fill="#fff" opacity="0.8"/>
+        </g>
+
+        <!-- Scan line on left eye -->
+        <rect x="98" y="150" width="48" height="3" fill="#2a5cff" opacity="0.4" clip-path="url(#screenClip)">
+          <animateTransform attributeName="transform" type="translate" values="0,0;0,48;0,0" dur="3s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- Nose -->
+        <rect x="152" y="200" width="16" height="10" rx="4" fill="#d4d0c8"/>
+
+        <!-- Mouth / speaker grille -->
+        <rect x="104" y="222" width="112" height="36" rx="10" fill="#edeae2" stroke="#d4d0c8" stroke-width="1"/>
+        <rect x="112" y="230" width="8" height="20" rx="2" fill="#d4d0c8"/>
+        <rect x="124" y="230" width="8" height="20" rx="2" fill="#2a5cff" opacity="0.5"/>
+        <rect x="136" y="230" width="8" height="20" rx="2" fill="#d4d0c8"/>
+        <rect x="148" y="230" width="8" height="20" rx="2" fill="#2a5cff" opacity="0.7"/>
+        <rect x="160" y="230" width="8" height="20" rx="2" fill="#d4d0c8"/>
+        <rect x="172" y="230" width="8" height="20" rx="2" fill="#2a5cff" opacity="0.5"/>
+        <rect x="184" y="230" width="8" height="20" rx="2" fill="#d4d0c8"/>
+        <rect x="196" y="230" width="8" height="20" rx="2" fill="#d4d0c8"/>
+
+        <!-- Corner screws -->
+        <circle cx="90" cy="80" r="5" fill="#d4d0c8"/>
+        <line x1="87" y1="80" x2="93" y2="80" stroke="#bcb9b0" stroke-width="1"/>
+        <line x1="90" y1="77" x2="90" y2="83" stroke="#bcb9b0" stroke-width="1"/>
+        <circle cx="230" cy="80" r="5" fill="#d4d0c8"/>
+        <line x1="227" y1="80" x2="233" y2="80" stroke="#bcb9b0" stroke-width="1"/>
+        <line x1="230" y1="77" x2="230" y2="83" stroke="#bcb9b0" stroke-width="1"/>
+        <circle cx="90" cy="272" r="5" fill="#d4d0c8"/>
+        <line x1="87" y1="272" x2="93" y2="272" stroke="#bcb9b0" stroke-width="1"/>
+        <line x1="90" y1="269" x2="90" y2="275" stroke="#bcb9b0" stroke-width="1"/>
+        <circle cx="230" cy="272" r="5" fill="#d4d0c8"/>
+        <line x1="227" y1="272" x2="233" y2="272" stroke="#bcb9b0" stroke-width="1"/>
+        <line x1="230" y1="269" x2="230" y2="275" stroke="#bcb9b0" stroke-width="1"/>
+      </svg>
+      <div class="float-badge">MSc abroad → someday ✦</div>
+    </div>
+  </div>
+</div>
+
+<!-- Projects -->
+<section id="projects">
+  <p class="section-label">Projects</p>
+  <div class="projects-grid">
+    <div class="project-card">
+      <p class="project-num">001</p>
+      <h3 class="project-title">AQI Dashboard<br>for Indian Cities</h3>
+      <p class="project-desc">A cloud-deployed web app that visualises air quality index trends across Indian cities and predicts tomorrow's AQI using a machine learning model trained on real government data.</p>
+      <div class="project-stack">
+        <span class="stack-pill">Python</span>
+        <span class="stack-pill">Streamlit</span>
+        <span class="stack-pill">scikit-learn</span>
+        <span class="stack-pill">Plotly</span>
+        <span class="stack-pill">Pandas</span>
+      </div>
+      <a href="#" class="project-link">View live app</a>
+    </div>
+    <div class="project-card">
+      <p class="project-num">002</p>
+      <h3 class="project-title">More projects<br><em style="font-family:'Instrument Serif',serif; font-style:italic; color:var(--muted);">coming soon</em></h3>
+      <p class="project-desc">Currently building my foundation in Python, machine learning, and cloud computing. New projects will be added here as they are completed.</p>
+      <div class="project-stack">
+        <span class="stack-pill">In progress</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Education -->
+<section id="education">
+  <p class="section-label">Educational background</p>
+  <div class="edu-timeline">
+
+    <div class="edu-item current">
+      <h3 class="edu-degree">Master of Computer Applications (MCA)</h3>
+      <p class="edu-school">Bharati Vidyapeeth, New Delhi · Specialisation in Cloud Computing & Data Science</p>
+      <span class="edu-note">Currently enrolled · EQF Level 7</span>
+    </div>
+
+    <div class="edu-item current">
+      <h3 class="edu-degree">PG Diploma in Applied Statistics</h3>
+      <p class="edu-school">Indira Gandhi National Open University (IGNOU), New Delhi</p>
+      <span class="edu-note">Concurrent enrolment · Building statistical foundations for ML research</span>
+    </div>
+
+    <div class="edu-item" style="margin-bottom:0;">
+      <h3 class="edu-degree">Class XII · Science</h3>
+      <p class="edu-school">Govt. Boys Sr. Sec. School, New Delhi · CBSE · 83% (Best Four)</p>
+    </div>
+
+
+
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <p class="section-label">Contact</p>
+  <div class="contact-block">
+    <div>
+      <h2 class="contact-intro">Let's talk<br><em>research, ML,</em><br>or just Python.</h2>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:heyaaqib@gmail.com" class="contact-link">
+        <span class="contact-link-label">Email</span>
+        <span class="contact-link-val">heyaaqib@gmail.com</span>
+        <span class="contact-link-arrow">↗</span>
+      </a>
+      <a href="https://github.com" target="_blank" class="contact-link">
+        <span class="contact-link-label">GitHub</span>
+        <span class="contact-link-val">github.com/aaqib</span>
+        <span class="contact-link-arrow">↗</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="footer-text">© 2026 Mirza Aaqib Beg · New Delhi, India</p>
+  <div class="availability">
+    <span class="dot-live"></span>
+    Open to research collaborations & opportunities
+  </div>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  let mx = 0, my = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  document.querySelectorAll('a, button, .project-card, .nav-links a').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.project-card, .edu-item, .contact-link').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
