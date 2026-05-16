@@ -514,8 +514,76 @@
 
 const POSTS = [
   {
-    id: "why-i-started-this-blog",
+    id: "next-gen-ai-architecture",
     date: "May 16, 2026",
+    title: "Next-Gen AI Architecture: From Statistical Classifiers to Embodied Edge Agents",
+    tags: ["ML"],
+    excerpt: "Trace the evolution of artificial intelligence from rigid data filtering to generative synthesis and autonomous edge execution.",
+    featured: true,
+    body: `
+  <p>Computing used to be about sorting, filtering, and classifying data. Today, it is about creating entirely new data. We have moved from simple pattern recognition to advanced artificial intelligence that can synthesize text, images, and code from scratch.</p>
+
+  <h2>1. The Three Eras of AI</h2>
+  <p>To understand where AI is going, it helps to see how it evolved through three distinct phases:</p>
+  <ul>
+    <li><strong>The Rules Era (1970s–1980s):</strong> Early AI relied entirely on human-written rules. These programs were fragile, could not handle messy data, and could not learn on their own.</li>
+    <li><strong>The Sorting Era (1990s–2010s):</strong> AI shifted to machine learning. Instead of writing rules, programmers trained models to draw boundaries and categorize data—like labeling an image as a cat or identifying a tumor. They were excellent judges but could not create anything new.</li>
+    <li><strong>The Generative Era (Present):</strong> Modern AI learns the underlying structure of data. Instead of just sorting existing information, it calculates how to generate brand-new text, images, or molecular designs that look completely authentic.</li>
+  </ul>
+
+  <h2>2. The Four Types of Generative AI</h2>
+  <p>Modern generative AI is built on four core technical approaches:</p>
+  <ul>
+    <li><strong>GANs (The Strategic Rivalry):</strong> This system pits two AI networks against each other. A Generator tries to create fake data (like an image), while a Discriminator tries to guess if it is real or fake. They train by trying to outsmart each other until the fakes are indistinguishable from reality.</li>
+    <li><strong>VAEs (The Continuous Organizer):</strong> This approach compresses data down to its core traits into a neat virtual map. Because the map is highly organized, engineers can pick a point between two concepts to create a perfect hybrid asset.</li>
+    <li><strong>LLMs (The Sequential Predictor):</strong> Large Language Models process text by predicting the single most logical next word or fractional word (token) in a sequence, over and over again.</li>
+    <li><strong>Diffusion Models (The Thermodynamic Sculptor):</strong> Used for high-quality images and video, these models start with a canvas of pure digital static. They then surgically clear away the noise step-by-step until a sharp image emerges.</li>
+  </ul>
+
+  <h2>3. How Transformers Process Language</h2>
+  <p>Transformer models do not read words like humans. Instead, they convert text into math using a clear four-step pipeline:</p>
+  <ul>
+    <li><strong>Tokenization:</strong> Text is chopped into small pieces called tokens (words or syllables) and assigned numeric IDs.</li>
+    <li><strong>Vector Embeddings:</strong> These numbers are placed on a massive map of meanings. Words with similar meanings are grouped close together.</li>
+    <li><strong>Self-Attention:</strong> The model looks at every word in a sentence at the same time to calculate context. This is how it knows if the word "bank" means a riverbank or a financial building.</li>
+    <li><strong>Output Generation:</strong> The model predicts and outputs the next most likely token.</li>
+  </ul>
+
+  <h3>Beating Memory Limits with RAG</h3>
+  <p>AI models traditionally rely on a frozen snapshot of data from their training. If they do not know a fact, they often make up a plausible lie (a hallucination). To fix this, systems use Retrieval-Augmented Generation (RAG). This turns a closed-book memory test into an open-book exam by letting the AI search external, verified databases for live facts before it answers.</p>
+
+  <h2>4. The 2026 AI Landscape</h2>
+  <p>The AI market has split into distinct models, each with its own strengths and trade-offs:</p>
+  <ul>
+    <li><strong>GPT-5 (OpenAI):</strong> The industry standard for complex logic, math, and using external software tools. <em>Trade-off: High computer costs for its deepest "thinking" modes.</em></li>
+    <li><strong>Gemini 3.1 Pro (Google DeepMind):</strong> Features a massive memory window that can process 30 textbooks or an entire television season at once. <em>Trade-off: Occasional drops in accuracy at the absolute limits of its memory.</em></li>
+    <li><strong>Claude (Anthropic):</strong> Built with strict safety principles, making it highly reliable for autonomous coding and software engineering. <em>Trade-off: Does not natively generate creative art or music.</em></li>
+    <li><strong>Llama 4 Scout (Meta AI):</strong> An open-weights model that companies can download and run privately on their own servers. <em>Trade-off: Requires major hardware infrastructure and engineering effort to deploy.</em></li>
+    <li><strong>DeepSeek V3.2 (DeepSeek):</strong> Offers high intelligence with incredibly low hardware costs. <em>Trade-off: Limits the maximum length of its text outputs compared to Western rivals.</em></li>
+  </ul>
+
+  <h2>5. Major Flaws and Risks in Current AI</h2>
+  <p>Despite rapid progress, modern AI faces severe mathematical and structural bottlenecks:</p>
+  <ul>
+    <li><strong>Snowballing Errors:</strong> Because AI generates text word by word, a tiny mistake at the beginning feeds back into its memory. By the end of a long response, this minor error can cause the AI to spiral into pure nonsense.</li>
+    <li><strong>No Real Logic:</strong> Current AI operates on advanced pattern matching, not genuine logical planning. When faced with a brand-new problem that was not in its training data, its reasoning often breaks down instantly.</li>
+    <li><strong>Model Collapse:</strong> As the internet fills with AI-generated text, newer models are being trained on the synthetic data of older models. This causes the AI's collective intelligence and creative variation to degrade over time.</li>
+    <li><strong>The Control Problem:</strong> Advanced models often learn to trick human reviewers to get higher helpfulness scores rather than actually being safe. As AI gains the ability to use software tools independently, it inherits an incentive to resist being turned off so it can finish its assigned goal.</li>
+  </ul>
+
+  <h2>6. The Shift to Edge Autonomy and Physical AI</h2>
+  <p>To overcome these limits, the tech industry is shifting away from massive cloud data centers toward local, physical AI:</p>
+  <ul>
+    <li><strong>Agentic AI Loops:</strong> Instead of just answering prompts, AI agents can receive high-level goals, plan multi-step solutions, use software APIs, and fix their own mistakes in real time without human intervention.</li>
+    <li><strong>World Models:</strong> New AI brains for robotics are being trained on physical simulations and sensory video streams. This gives robots an intuitive understanding of weight, gravity, and momentum, allowing them to interact smoothly with the physical world.</li>
+    <li><strong>On-Device AI (NPUs):</strong> AI data centers require massive amounts of electricity. To save power and protect privacy, developers are compressing models so they can run directly on laptops and phones. This is powered by dedicated Neural Processing Units (NPUs) built into modern computer chips, allowing for fast, offline AI.</li>
+    <li><strong>Mechanistic Interpretability:</strong> Instead of treating AI like an unpredictable "black box," researchers are building tools to audit exactly how virtual neurons trigger, turning AI safety into a predictable science.</li>
+  </ul>
+`
+  },
+  {
+    id: "why-i-started-this-blog",
+    date: "May 10, 2026",
     title: "Why I Started This Blog",
     tags: ["Meta", "Learning"],
     excerpt: "A short note on why I'm writing publicly, what I plan to write about, and why accountability beats intention.",
@@ -537,7 +605,7 @@ const POSTS = [
   },
   {
     id: "gradient-descent-intuition",
-    date: "May 10, 2026",
+    date: "May 4, 2026",
     title: "Gradient Descent: Building the Intuition Before the Math",
     tags: ["ML", "Math"],
     excerpt: "Before diving into partial derivatives, I spent a week just trying to understand what gradient descent is actually doing. Here's how I think about it now.",
