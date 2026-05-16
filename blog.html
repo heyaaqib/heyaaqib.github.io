@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Mirza Aaqib Beg</title>
+<meta name="description" content="Thoughts on machine learning, statistics, life as an MCA student, and everything in between — by Mirza Aaqib Beg.">
+<meta name="author" content="Mirza Aaqib Beg">
+<link rel="canonical" href="https://heyaaqib.github.io/blog.html">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f5f2ec;
+    --ink: #0f0e0c;
+    --muted: #7a7570;
+    --accent: #2a5cff;
+    --card: #edeae2;
+    --border: rgba(15,14,12,0.12);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+    cursor: none;
+  }
+
+  /* ── Cursor ── */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor.hover { width: 36px; height: 36px; background: transparent; border: 1.5px solid var(--accent); }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    z-index: 100;
+    background: rgba(245,242,236,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+
+  /* ── Page header ── */
+  .page-header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10rem 3rem 4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.1s forwards;
+  }
+  .page-header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.2s forwards;
+  }
+  .page-header h1 em {
+    font-style: italic;
+    color: var(--muted);
+  }
+  .page-header .header-sub {
+    margin-top: 1rem;
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 540px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.35s forwards;
+  }
+
+  /* ── Tag filter bar ── */
+  .filter-bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .filter-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  .filter-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    color: var(--muted);
+    background: transparent;
+    cursor: none;
+    transition: all 0.18s;
+    letter-spacing: 0.03em;
+  }
+  .filter-tag:hover, .filter-tag.active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  /* ── Blog list ── */
+  .blog-list {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 3rem 6rem;
+  }
+
+  /* Featured (first post) */
+  .post-featured {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    margin-bottom: 1.5px;
+    background: var(--bg);
+    text-decoration: none;
+    color: var(--ink);
+    transition: background 0.2s;
+    cursor: none;
+  }
+  .post-featured:hover { background: var(--card); }
+  .post-featured .post-meta-col {
+    padding: 2.5rem;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .post-featured .post-content-col {
+    padding: 2.5rem;
+  }
+  .post-featured-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .post-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .post-tags-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 1rem;
+  }
+  .post-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 9px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .post-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+  .post-excerpt {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+  .post-read-more {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .post-read-more::after { content: '→'; }
+
+  /* Regular post rows */
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .post-card {
+    background: var(--bg);
+    padding: 2rem;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background 0.2s;
+    cursor: none;
+    display: flex;
+    flex-direction: column;
+  }
+  .post-card:hover { background: var(--card); }
+  .post-card .post-title { font-size: 1.3rem; }
+  .post-card .post-excerpt { font-size: 13px; flex: 1; }
+
+  /* Empty state */
+  .empty-state {
+    padding: 4rem 0;
+    text-align: center;
+  }
+  .empty-state p {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Article view (shown when a post is open) ── */
+  .article-view {
+    display: none;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 10rem 3rem 6rem;
+  }
+  .article-view.visible { display: block; }
+  .article-back {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    background: none;
+    border: none;
+    cursor: none;
+    padding: 0;
+    margin-bottom: 3rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .article-back::before { content: '←'; }
+  .article-back:hover { color: var(--ink); }
+  .article-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .article-eyebrow span { color: var(--muted); }
+  .article-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .article-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .article-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+  .article-body {
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+  .article-body p { margin-bottom: 1.5rem; }
+  .article-body h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.6rem;
+    margin: 2.5rem 0 1rem;
+    letter-spacing: -0.01em;
+  }
+  .article-body h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2rem 0 0.75rem;
+  }
+  .article-body strong { font-weight: 500; }
+  .article-body em { font-style: italic; color: var(--muted); }
+  .article-body a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--border);
+    transition: text-decoration-color 0.2s;
+  }
+  .article-body a:hover { text-decoration-color: var(--ink); }
+  .article-body blockquote {
+    border-left: 2px solid var(--accent);
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    margin: 2rem 0;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .article-body code {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    background: var(--card);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .article-body ul, .article-body ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .article-body li { margin-bottom: 0.4rem; }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .availability {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .dot-live {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+    50%       { opacity: 0.8; box-shadow: 0 0 0 4px rgba(34,197,94,0); }
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 768px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    .page-header { padding: 8rem 1.5rem 3rem; }
+    .filter-bar { padding: 1.5rem 1.5rem; }
+    .blog-list { padding: 0 1.5rem 4rem; }
+    .post-featured { grid-template-columns: 1fr; }
+    .post-featured .post-meta-col { border-right: none; border-bottom: 1px solid var(--border); }
+    .posts-grid { grid-template-columns: 1fr; }
+    .article-view { padding: 8rem 1.5rem 4rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+
+<nav>
+  <a href="index.html" class="nav-name">Mirza Aaqib Beg</a>
+  <ul class="nav-links">
+    <li><a href="index.html#projects">Projects</a></li>
+    <li><a href="index.html#education">Education</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+    <li><a href="blog.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════════════════════════════
+     BLOG LIST VIEW
+════════════════════════════════════════ -->
+<div id="listView">
+  <div class="page-header">
+    <p class="eyebrow">Writing</p>
+    <h1>Thoughts &amp; <em>Notes</em></h1>
+    <p class="header-sub">On machine learning, statistics, study, and whatever's on my mind. Written for myself first — shared in case it helps someone else.</p>
+  </div>
+
+  <div class="filter-bar" id="filterBar">
+    <span class="filter-label">Filter:</span>
+    <!-- Filter buttons are generated by JS from post tags -->
+  </div>
+
+  <div class="blog-list" id="blogList">
+    <!-- Posts are rendered by JS — see the POSTS ARRAY below -->
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ARTICLE VIEW
+════════════════════════════════════════ -->
+<div class="article-view" id="articleView">
+  <button class="article-back" id="backBtn">Back to blog</button>
+  <p class="article-eyebrow" id="artEyebrow"></p>
+  <h1 class="article-title" id="artTitle"></h1>
+  <div class="article-meta" id="artMeta"></div>
+  <hr class="article-divider">
+  <div class="article-body" id="artBody"></div>
+</div>
+
+<footer>
+  <p class="footer-text">© 2026 Mirza Aaqib Beg · New Delhi, India</p>
+  <div class="availability">
+    <span class="dot-live"></span>
+    Open to research collaborations &amp; opportunities
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   ★  HOW TO ADD A NEW BLOG POST  ★
+
+   1. Copy one of the objects below and paste it at the
+      TOP of the POSTS array (so newest appears first).
+   2. Fill in:
+      - id:       a unique slug, e.g. "my-post-slug"
+      - date:     "Month DD, YYYY"
+      - title:    your post title
+      - tags:     array of short strings, e.g. ["ML", "Python"]
+      - excerpt:  1–2 sentence teaser shown on the list page
+      - featured: set true ONLY for the one post you want
+                  displayed large at the top (first post usually)
+      - body:     the full HTML content of your post
+                  Use <p>, <h2>, <h3>, <blockquote>, <ul>,
+                  <strong>, <em>, <code>, <a> freely.
+   3. Save and push to GitHub. Done.
+══════════════════════════════════════════════════════════ */
+
+const POSTS = [
+  {
+    id: "why-i-started-this-blog",
+    date: "May 16, 2026",
+    title: "Why I Started This Blog",
+    tags: ["Meta", "Learning"],
+    excerpt: "A short note on why I'm writing publicly, what I plan to write about, and why accountability beats intention.",
+    featured: true,
+    body: `
+      <p>I've written over 3,000 articles professionally — on anime, tech, movies, TV. I know how to write. What I've never done is write <em>for myself</em>, in public, about the things I'm actually trying to figure out.</p>
+      <p>This blog is an attempt to fix that.</p>
+      <h2>What this is</h2>
+      <p>I'm in the middle of a career transition. Former writer, now MCA student, aspiring ML researcher. I'm learning Python, statistics, machine learning, cloud — basically rebuilding my entire skill set from scratch while carrying the weight of an MCA programme at the same time.</p>
+      <p>Writing forces me to understand things. I can fool myself into thinking I've learned something when I haven't. I cannot fool a blank page.</p>
+      <blockquote>"If you can't explain it simply, you don't understand it well enough." — someone who understood things well enough to say this.</blockquote>
+      <h2>What I'll write about</h2>
+      <p>Mostly: machine learning concepts I'm working through, study notes, honest reflections on what it's like to become technical as an adult, and occasional thoughts on writing, research, and the long game of building a career in a field you're still entering.</p>
+      <p>I won't pretend to be an expert. I'm not. I'm a student. That's the point.</p>
+      <h2>Why public?</h2>
+      <p>Accountability. Knowing someone might read this makes me more careful. It also creates a record — so future-me can look back and see how far I've come, or cringe at how wrong I was. Both outcomes are valuable.</p>
+      <p>If something here helps someone else who's on a similar path, that's a bonus I'll happily take.</p>
+    `
+  },
+  {
+    id: "gradient-descent-intuition",
+    date: "May 10, 2026",
+    title: "Gradient Descent: Building the Intuition Before the Math",
+    tags: ["ML", "Math"],
+    excerpt: "Before diving into partial derivatives, I spent a week just trying to understand what gradient descent is actually doing. Here's how I think about it now.",
+    featured: false,
+    body: `
+      <p>When I first encountered gradient descent, I did what most people do: I looked at the formula, nodded along, and moved on. A week later I realised I hadn't actually understood anything — I'd just memorised a shape.</p>
+      <p>So I went back and built the intuition from scratch. This is what I have now.</p>
+      <h2>The core idea</h2>
+      <p>You're lost in a hilly landscape, it's foggy, and you want to reach the lowest valley. You can't see the whole landscape — you can only feel the slope under your feet. Gradient descent is the strategy of always stepping in the direction that goes downhill the fastest.</p>
+      <p>In ML, the "landscape" is the loss function — a measure of how wrong your model is. The "hill" is your current parameter values. "Going downhill" means updating those parameters to reduce the loss.</p>
+      <h2>The learning rate</h2>
+      <p>How big a step do you take each time? That's the learning rate — <code>α</code>.</p>
+      <ul>
+        <li>Too large: you overshoot the valley and bounce around, never settling.</li>
+        <li>Too small: you'll get there eventually, but you'll be there for geological ages.</li>
+        <li>Just right: smooth, steady descent toward the minimum.</li>
+      </ul>
+      <p>Choosing a good learning rate is genuinely hard. Most practitioners start with something like <code>0.01</code> or <code>0.001</code> and adjust based on how training goes.</p>
+      <h2>What "gradient" actually means</h2>
+      <p>The gradient is just the slope — but in multiple dimensions at once. For a model with many parameters, the gradient tells you, for each parameter, whether increasing or decreasing it would make things better or worse.</p>
+      <p>You then move each parameter a small step in the opposite direction of the gradient. Opposite because you want to go <em>down</em>, not up.</p>
+      <h2>Where I'm at</h2>
+      <p>I can now hold the intuition comfortably. The math is coming — I'm working through the calculus piece by piece. But I've learned that understanding the <em>why</em> before the <em>how</em> makes the math land a lot better when it arrives.</p>
+    `
+  },
+  {
+    id: "first-week-ignou-statistics",
+    date: "April 28, 2026",
+    title: "First Week of Applied Statistics at IGNOU",
+    tags: ["Statistics", "Study"],
+    excerpt: "Starting a PG Diploma in Applied Statistics while already doing an MCA was either a great idea or a terrible one. Week one report.",
+    featured: false,
+    body: `
+      <p>I enrolled in IGNOU's PG Diploma in Applied Statistics because machine learning runs on statistics. You can copy-paste sklearn code without it — but you can't understand what you're doing, and I want to understand what I'm doing.</p>
+      <p>Week one is done. Here are my notes.</p>
+      <h2>The material</h2>
+      <p>We started with probability basics — sample spaces, events, axioms. Things I'd seen before in scattered YouTube videos but never studied rigorously. Having a structured syllabus helps a lot. I always knew the intuitions; now I'm learning the formalism.</p>
+      <h2>What's hard</h2>
+      <p>IGNOU is distance learning. That means self-discipline is the entire game. No one checks if you read the chapter. No lecture reminds you of the deadline. It's just you and the material.</p>
+      <p>Combined with the MCA workload, time management is the real challenge — not the content itself. So far I'm managing. Ask me again in a month.</p>
+      <h2>Why it's worth it</h2>
+      <p>Every ML concept I've encountered so far has a statistics backbone. Distributions, expectation, variance, hypothesis testing — these aren't optional extras. They're load-bearing walls. Building them properly now will pay off for years.</p>
+      <p>Week two starts Monday. Conditional probability. Let's go.</p>
+    `
+  }
+];
+
+/* ══════════════════════════════════════════
+   ENGINE — no need to edit below this line
+══════════════════════════════════════════ */
+
+let activeFilter = 'All';
+
+function allTags() {
+  const set = new Set(['All']);
+  POSTS.forEach(p => p.tags.forEach(t => set.add(t)));
+  return [...set];
+}
+
+function renderFilters() {
+  const bar = document.getElementById('filterBar');
+  bar.innerHTML = '<span class="filter-label">Filter:</span>';
+  allTags().forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-tag' + (tag === activeFilter ? ' active' : '');
+    btn.textContent = tag;
+    btn.addEventListener('click', () => {
+      activeFilter = tag;
+      renderFilters();
+      renderList();
+    });
+    bar.appendChild(btn);
+  });
+}
+
+function filteredPosts() {
+  if (activeFilter === 'All') return POSTS;
+  return POSTS.filter(p => p.tags.includes(activeFilter));
+}
+
+function renderList() {
+  const container = document.getElementById('blogList');
+  const posts = filteredPosts();
+  container.innerHTML = '';
+
+  if (posts.length === 0) {
+    container.innerHTML = '<div class="empty-state"><p>No posts in this category yet.</p></div>';
+    return;
+  }
+
+  const featured = posts.find(p => p.featured) || posts[0];
+  const rest = posts.filter(p => p !== featured);
+
+  // Featured card
+  const fa = document.createElement('a');
+  fa.href = '#';
+  fa.className = 'post-featured';
+  fa.innerHTML = `
+    <div class="post-meta-col">
+      <div>
+        <p class="post-featured-label">Latest post</p>
+        <p class="post-date">${featured.date}</p>
+      </div>
+      <div class="post-tags-wrap">
+        ${featured.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}
+      </div>
+    </div>
+    <div class="post-content-col">
+      <h2 class="post-title">${featured.title}</h2>
+      <p class="post-excerpt">${featured.excerpt}</p>
+      <span class="post-read-more">Read post</span>
+    </div>
+  `;
+  fa.addEventListener('click', e => { e.preventDefault(); openPost(featured.id); });
+  container.appendChild(fa);
+
+  if (rest.length === 0) return;
+
+  const grid = document.createElement('div');
+  grid.className = 'posts-grid';
+
+  rest.forEach(post => {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.className = 'post-card';
+    a.innerHTML = `
+      <p class="post-date" style="margin-bottom:1rem;">${post.date}</p>
+      <h3 class="post-title">${post.title}</h3>
+      <p class="post-excerpt">${post.excerpt}</p>
+      <div class="post-tags-wrap" style="margin-top:1rem; margin-bottom:0.75rem;">
+        ${post.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}
+      </div>
+      <span class="post-read-more">Read post</span>
+    `;
+    a.addEventListener('click', e => { e.preventDefault(); openPost(post.id); });
+    grid.appendChild(a);
+  });
+
+  container.appendChild(grid);
+
+  // Scroll-reveal
+  document.querySelectorAll('.post-card, .post-featured').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    setTimeout(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }, 60);
+  });
+}
+
+function openPost(id) {
+  const post = POSTS.find(p => p.id === id);
+  if (!post) return;
+
+  document.getElementById('listView').style.display = 'none';
+  const av = document.getElementById('articleView');
+  av.classList.add('visible');
+
+  document.getElementById('artEyebrow').innerHTML =
+    `${post.tags.join(' · ')} <span>·</span> ${post.date}`;
+  document.getElementById('artTitle').textContent = post.title;
+  document.getElementById('artMeta').innerHTML =
+    `<span>${post.date}</span><span>${post.tags.join(' · ')}</span>`;
+  document.getElementById('artBody').innerHTML = post.body;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  history.pushState({ postId: id }, '', `#${id}`);
+  attachCursorHovers();
+}
+
+function closePost() {
+  document.getElementById('listView').style.display = '';
+  document.getElementById('articleView').classList.remove('visible');
+  history.pushState({}, '', 'blog.html');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('backBtn').addEventListener('click', closePost);
+window.addEventListener('popstate', e => {
+  if (e.state && e.state.postId) {
+    openPost(e.state.postId);
+  } else {
+    closePost();
+  }
+});
+
+// Open post from URL hash on load
+if (location.hash) {
+  const id = location.hash.slice(1);
+  if (POSTS.find(p => p.id === id)) {
+    openPost(id);
+  }
+}
+
+// Custom cursor
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+});
+
+function attachCursorHovers() {
+  document.querySelectorAll('a, button, .filter-tag, .post-card, .post-featured').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+}
+
+// Init
+renderFilters();
+renderList();
+attachCursorHovers();
+</script>
+</body>
+</html>
